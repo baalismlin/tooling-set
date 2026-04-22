@@ -15,6 +15,8 @@ from tools import (
     timestamp_to_human,
     timestamp_to_unix,
     timestamp_now,
+    base64_encode,
+    base64_decode,
 )
 
 
@@ -91,6 +93,37 @@ def main() -> None:
     )
     now_parser.set_defaults(func=timestamp_now)
     
+    # Base64 tool
+    base64_parser = subparsers.add_parser(
+        'base64',
+        help='Base64 encoding and decoding',
+        description='Encode or decode text/files to/from Base64 format'
+    )
+    base64_subparsers = base64_parser.add_subparsers(
+        dest='base64_command',
+        help='Base64 commands'
+    )
+    
+    # encode
+    encode_parser = base64_subparsers.add_parser(
+        'encode',
+        help='Encode text or file to Base64'
+    )
+    encode_parser.add_argument('--text', help='Text string to encode')
+    encode_parser.add_argument('--file', help='File path to read and encode')
+    encode_parser.add_argument('--output', '-o', help='Output file path')
+    encode_parser.set_defaults(func=base64_encode)
+    
+    # decode
+    decode_parser = base64_subparsers.add_parser(
+        'decode',
+        help='Decode Base64 string or file'
+    )
+    decode_parser.add_argument('--text', help='Base64 string to decode')
+    decode_parser.add_argument('--file', help='File path to read and decode')
+    decode_parser.add_argument('--output', '-o', help='Output file path')
+    decode_parser.set_defaults(func=base64_decode)
+    
     args = parser.parse_args()
     
     if not args.command:
@@ -99,6 +132,10 @@ def main() -> None:
     
     if args.command == 'timestamp' and not args.timestamp_command:
         timestamp_parser.print_help()
+        sys.exit(1)
+    
+    if args.command == 'base64' and not args.base64_command:
+        base64_parser.print_help()
         sys.exit(1)
     
     args.func(args)

@@ -2,18 +2,6 @@
 
 A collection of utility tools with a unified Python CLI interface.
 
-## Project Structure
-
-```
-tooling-set/
-├── tool.py                    # CLI entry point
-├── tools/                     # Tool modules
-│   ├── __init__.py
-│   ├── escape.py            # ASCII character escape tool
-│   └── timestamp.py         # Timestamp conversion tool
-├── .gitignore               # Git ignore rules
-└── README.md                # This file
-```
 
 ## Usage
 
@@ -65,6 +53,49 @@ python tool.py escape input.txt
 # Creates input.txt.escaped
 ```
 
+### base64
+
+Encode and decode text or files to/from Base64 format.
+
+**Usage:**
+```bash
+python tool.py base64 <command> [options]
+```
+
+**Commands:**
+- `encode` - Encode text or file to Base64
+- `decode` - Decode Base64 string or file
+
+**Options:**
+- `--text <string>` - Text string to encode/decode
+- `--file <path>` - File path to read and encode/decode
+- `--output, -o <path>` - Output file path (optional)
+
+**Description:**
+- Supports both text string and file input
+- Outputs to stdout or file
+- Handles UTF-8 encoding
+
+**Examples:**
+```bash
+# Encode text to Base64
+python tool.py base64 encode --text "hello world"
+# Output: aGVsbG8gd29ybGQ=
+
+# Decode Base64 string
+python tool.py base64 decode --text "aGVsbG8gd29ybGQ="
+# Output: hello world
+
+# Encode file to Base64
+python tool.py base64 encode --file input.txt
+
+# Decode Base64 file
+python tool.py base64 decode --file encoded.b64
+
+# Encode and save to file
+python tool.py base64 encode --text "secret" --output encoded.b64
+```
+
 ### timestamp
 
 Converts between Unix timestamps and human-readable datetime formats with timezone support.
@@ -100,6 +131,12 @@ python tool.py timestamp now
 
 # Get current time in specific timezone
 python tool.py timestamp now Asia/Shanghai
+
+# Encode text to Base64
+python tool.py base64 encode --text "hello world"
+
+# Decode Base64 string
+python tool.py base64 decode --text "aGVsbG8gd29ybGQ="
 ```
 
 ## Adding New Tools

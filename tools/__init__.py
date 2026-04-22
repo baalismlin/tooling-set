@@ -9,6 +9,10 @@ from .timestamp import (
     timestamp_now,
     get_timezone,
 )
+from .base64 import (
+    base64_encode,
+    base64_decode,
+)
 
 __all__ = [
     "escape_tool",
@@ -16,4 +20,6 @@ __all__ = [
     "timestamp_to_unix",
     "timestamp_now",
     "get_timezone",
+    "base64_encode",
+    "base64_decode",
 ]
