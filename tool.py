@@ -17,6 +17,7 @@ from tools import (
     timestamp_now,
     base64_encode,
     base64_decode,
+    hash_calculate,
 )
 
 
@@ -123,6 +124,17 @@ def main() -> None:
     decode_parser.add_argument('--file', help='File path to read and decode')
     decode_parser.add_argument('--output', '-o', help='Output file path')
     decode_parser.set_defaults(func=base64_decode)
+    
+    # Hash tool
+    hash_parser = subparsers.add_parser(
+        'hash',
+        help='Hash calculation (MD5, SHA1, SHA256)',
+        description='Calculate hash of text or file using MD5, SHA1, or SHA256'
+    )
+    hash_parser.add_argument('algorithm', choices=['md5', 'sha1', 'sha256'], help='Hash algorithm')
+    hash_parser.add_argument('--text', help='Text string to hash')
+    hash_parser.add_argument('--file', help='File path to read and hash')
+    hash_parser.set_defaults(func=hash_calculate)
     
     args = parser.parse_args()
     

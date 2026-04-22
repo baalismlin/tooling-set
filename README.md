@@ -94,6 +94,46 @@ python tool.py base64 decode --file encoded.b64
 
 # Encode and save to file
 python tool.py base64 encode --text "secret" --output encoded.b64
+
+### hash
+
+Calculate hash of text or file using MD5, SHA1, or SHA256 algorithms.
+
+**Usage:**
+```bash
+python tool.py hash <algorithm> [options]
+```
+
+**Algorithms:**
+- `md5` - MD5 hash (128-bit)
+- `sha1` - SHA1 hash (160-bit)
+- `sha256` - SHA256 hash (256-bit)
+
+**Options:**
+- `--text <string>` - Text string to hash
+- `--file <path>` - File path to read and hash
+
+**Description:**
+- Supports MD5, SHA1, and SHA256 algorithms
+- Supports both text string and file input
+- Outputs hash value as hexadecimal string
+
+**Examples:**
+```bash
+# Calculate MD5 hash of text
+python tool.py hash md5 --text "hello"
+# Output: 5d41402abc4b2a76b9719d911017c592
+
+# Calculate SHA1 hash
+python tool.py hash sha1 --text "hello"
+# Output: aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
+
+# Calculate SHA256 hash
+python tool.py hash sha256 --text "hello"
+# Output: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+
+# Calculate hash of file
+python tool.py hash md5 --file input.txt
 ```
 
 ### timestamp

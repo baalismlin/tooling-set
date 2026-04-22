@@ -13,6 +13,7 @@ from .base64 import (
     base64_encode,
     base64_decode,
 )
+from .hash import hash_calculate
 
 __all__ = [
     "escape_tool",
@@ -22,4 +23,5 @@ __all__ = [
     "get_timezone",
     "base64_encode",
     "base64_decode",
+    "hash_calculate",
 ]
