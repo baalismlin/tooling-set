@@ -4,8 +4,9 @@ Base64 encoding and decoding tool.
 
 import argparse
 import base64
-import sys
 from typing import Optional
+
+from .utils import read_input, write_output, handle_error
 
 
 def base64_encode(args: argparse.Namespace) -> None:
@@ -26,28 +27,12 @@ def base64_encode(args: argparse.Namespace) -> None:
         >>> base64_encode(args)
         aGVsbG8=
     """
-    if args.text:
-        content = args.text
-    elif args.file:
-        try:
-            with open(args.file, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except FileNotFoundError:
-            print(f"Error: File not found: {args.file}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        print("Error: Either --text or --file must be provided", file=sys.stderr)
-        sys.exit(1)
+    content = read_input(args)
     
     # Encode to base64
     encoded = base64.b64encode(content.encode('utf-8')).decode('ascii')
     
-    if args.output:
-        with open(args.output, 'w', encoding='utf-8') as f:
-            f.write(encoded)
-        print(f"Encoded content written to: {args.output}")
-    else:
-        print(encoded)
+    write_output(encoded, args)
 
 
 def base64_decode(args: argparse.Namespace) -> None:
@@ -68,28 +53,11 @@ def base64_decode(args: argparse.Namespace) -> None:
         >>> base64_decode(args)
         hello
     """
-    if args.text:
-        content = args.text
-    elif args.file:
-        try:
-            with open(args.file, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except FileNotFoundError:
-            print(f"Error: File not found: {args.file}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        print("Error: Either --text or --file must be provided", file=sys.stderr)
-        sys.exit(1)
+    content = read_input(args)
     
     try:
         decoded = base64.b64decode(content.encode('ascii')).decode('utf-8')
     except Exception as e:
-        print(f"Error: Invalid Base64 input - {e}", file=sys.stderr)
-        sys.exit(1)
+        handle_error(f"Invalid Base64 input - {e}")
     
-    if args.output:
-        with open(args.output, 'w', encoding='utf-8') as f:
-            f.write(decoded)
-        print(f"Decoded content written to: {args.output}")
-    else:
-        print(decoded)
+    write_output(decoded, args)

@@ -3,8 +3,9 @@ Escape tool for converting non-ASCII characters to Unicode escape sequences.
 """
 
 import argparse
-import sys
 from typing import Any
+
+from .utils import handle_error
 
 
 def escape_tool(args: argparse.Namespace) -> None:
@@ -52,8 +53,6 @@ def escape_tool(args: argparse.Namespace) -> None:
             print("File contains only ASCII characters")
     
     except FileNotFoundError:
-        print(f"Error: File not found: {args.file}", file=sys.stderr)
-        sys.exit(1)
+        handle_error(f"File not found: {args.file}")
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+        handle_error(str(e))

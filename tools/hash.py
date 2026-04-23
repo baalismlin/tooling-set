@@ -4,8 +4,9 @@ Hash calculation tool for MD5, SHA1, and SHA256.
 
 import argparse
 import hashlib
-import sys
 from typing import Optional
+
+from .utils import read_input, handle_error
 
 
 def hash_calculate(args: argparse.Namespace) -> None:
@@ -31,22 +32,9 @@ def hash_calculate(args: argparse.Namespace) -> None:
     algorithm = args.algorithm.lower()
     
     if algorithm not in ['md5', 'sha1', 'sha256']:
-        print(f"Error: Unsupported algorithm: {algorithm}", file=sys.stderr)
-        print("Supported algorithms: md5, sha1, sha256", file=sys.stderr)
-        sys.exit(1)
+        handle_error(f"Unsupported algorithm: {algorithm}. Supported: md5, sha1, sha256")
     
-    if args.text:
-        content = args.text
-    elif args.file:
-        try:
-            with open(args.file, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except FileNotFoundError:
-            print(f"Error: File not found: {args.file}", file=sys.stderr)
-            sys.exit(1)
-    else:
-        print("Error: Either --text or --file must be provided", file=sys.stderr)
-        sys.exit(1)
+    content = read_input(args)
     
     # Calculate hash
     if algorithm == 'md5':

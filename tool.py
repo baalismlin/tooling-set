@@ -21,19 +21,8 @@ from tools import (
 )
 
 
-def main() -> None:
-    """
-    Main entry point for the CLI.
-    
-    Parses command-line arguments and routes to the appropriate tool function.
-    """
-    parser = argparse.ArgumentParser(
-        description='Tooling set - unified CLI for utility tools',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    subparsers = parser.add_subparsers(dest='command', help='Available tools')
-    
-    # Escape tool
+def setup_escape_parser(subparsers) -> None:
+    """Set up the escape tool parser."""
     escape_parser = subparsers.add_parser(
         'escape',
         help='Escape non-ASCII characters to Unicode escape sequences',
@@ -41,8 +30,10 @@ def main() -> None:
     )
     escape_parser.add_argument('file', help='Input file path')
     escape_parser.set_defaults(func=escape_tool)
-    
-    # Timestamp tool
+
+
+def setup_timestamp_parser(subparsers) -> None:
+    """Set up the timestamp tool parser with subcommands."""
     timestamp_parser = subparsers.add_parser(
         'timestamp',
         help='Timestamp conversion with timezone support',
@@ -94,7 +85,11 @@ def main() -> None:
     )
     now_parser.set_defaults(func=timestamp_now)
     
-    # Base64 tool
+    return timestamp_parser
+
+
+def setup_base64_parser(subparsers) -> None:
+    """Set up the base64 tool parser with subcommands."""
     base64_parser = subparsers.add_parser(
         'base64',
         help='Base64 encoding and decoding',
@@ -125,7 +120,11 @@ def main() -> None:
     decode_parser.add_argument('--output', '-o', help='Output file path')
     decode_parser.set_defaults(func=base64_decode)
     
-    # Hash tool
+    return base64_parser
+
+
+def setup_hash_parser(subparsers) -> None:
+    """Set up the hash tool parser."""
     hash_parser = subparsers.add_parser(
         'hash',
         help='Hash calculation (MD5, SHA1, SHA256)',
@@ -135,9 +134,10 @@ def main() -> None:
     hash_parser.add_argument('--text', help='Text string to hash')
     hash_parser.add_argument('--file', help='File path to read and hash')
     hash_parser.set_defaults(func=hash_calculate)
-    
-    args = parser.parse_args()
-    
+
+
+def validate_args(args, parser, timestamp_parser, base64_parser) -> None:
+    """Validate command-line arguments."""
     if not args.command:
         parser.print_help()
         sys.exit(1)
@@ -149,6 +149,30 @@ def main() -> None:
     if args.command == 'base64' and not args.base64_command:
         base64_parser.print_help()
         sys.exit(1)
+
+
+def main() -> None:
+    """
+    Main entry point for the CLI.
+    
+    Parses command-line arguments and routes to the appropriate tool function.
+    """
+    parser = argparse.ArgumentParser(
+        description='Tooling set - unified CLI for utility tools',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    subparsers = parser.add_subparsers(dest='command', help='Available tools')
+    
+    # Set up all tool parsers
+    setup_escape_parser(subparsers)
+    timestamp_parser = setup_timestamp_parser(subparsers)
+    base64_parser = setup_base64_parser(subparsers)
+    setup_hash_parser(subparsers)
+    
+    args = parser.parse_args()
+    
+    # Validate arguments
+    validate_args(args, parser, timestamp_parser, base64_parser)
     
     args.func(args)
 
